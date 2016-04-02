@@ -3,7 +3,7 @@ var Todo = require('./todo.model');
 // curl http://localhost:5000/api/todo/
 exports.getAll = function(req, res) {
     Todo.find({}, function(err, todos) {
-        res.send(todos)
+        res.send({status: "ok", result: todos});
     });
 };
 
@@ -11,11 +11,14 @@ exports.getAll = function(req, res) {
 exports.create = function(req, res) {
     var todo = new Todo();
     var text = req.body.text;
-    console.log(text);
     if (text !== '') {
         todo.text = text;
         todo.save(function(err, result) {
-            if (!err) res.send(result);
+            if (err) {
+                res.send({status: "error", message: "error occur from system"});
+            } else {
+                res.send({status: "ok", result: result});
+            }
         });
     }
 };
