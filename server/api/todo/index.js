@@ -4,8 +4,8 @@ var express = require('express'),
 
 router.get('/', controller.getAll);
 router.post('/create', controller.create);
-router.delete('/update', controller.update);
-router.delete('/archive', controller.archive);
+router.post('/update', controller.update);
+router.get('/archive', controller.archive);
 router.delete('/destroy', controller.destroy);
 
 module.exports = router;
