@@ -5,6 +5,6 @@ module.exports = function(app) {
     app.route('/*')
         .get(function(req, res) {
             res.contentType('json');
-            res.header('Access-Control-Allow-Origin', '*' );
+            res.send({status: "error", message: "end point not found"});
         });
 };
