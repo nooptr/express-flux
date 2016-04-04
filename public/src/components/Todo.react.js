@@ -3,7 +3,8 @@ var React = require('react');
 var Todo = React.createClass({
     handleClick: function () {
         var todo = this.props.todo;
-        this.props.onToggle(todo.id);
+        todo.complete = todo.complete ? false : true;
+        this.props.onToggle(todo.id, todo);
     },
     render: function () {
         var todo = this.props.todo;

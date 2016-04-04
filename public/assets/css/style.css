@@ -6,7 +6,7 @@ ul li {
     text-decoration: none;
 }
 
-.complete-true {
+.complete-true,.complete-1  {
     text-decoration: line-through;
     color: grey;
 }

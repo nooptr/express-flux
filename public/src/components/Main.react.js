@@ -25,13 +25,11 @@ var Main = React.createClass({
     },
 
     componentWillMount: function() {
-        this.setState({
-            savedTodoList: TodoStore.getAll()
-        })
+        TodoStore.addChangeListener(this._onChange);
     },
 
     componentDidMount: function() {
-        TodoStore.addChangeListener(this._onChange);
+        TodoActions.all();
     },
 
     componentWillUnmount: function() {
@@ -42,18 +40,12 @@ var Main = React.createClass({
         this.setState(getTodoState());
     },
 
-    handleSaveTodo: function (todo) {
-        TodoActions.create(todo.text);
-    },
-
     handleOnArchive: function () {
         TodoActions.archive();
     },
 
-    handleChange: function (id) {
-        var todoList = TodoStore.getAll();
-        var todo = todoList[id];
-        TodoActions.update(todo);
+    handleChange: function (id, todo) {
+        TodoActions.update(id, {id: todo.id, text: todo.text, complete: todo.complete});
     },
 
     render: function() {
@@ -62,8 +54,7 @@ var Main = React.createClass({
                 <RemainingBox
                     onArchive={ this.handleOnArchive }
                 />
-                <TodoInput
-                    onSaveTodo={ this.handleSaveTodo } />
+                <TodoInput />
                 <TodoList
                     onChange={ this.handleChange } />
             </div>

@@ -3,8 +3,8 @@ var Todo = require('./Todo.react.js');
 var TodoStore = require('../stores/TodoStore.js');
 
 var TodoList = React.createClass({
-    handleToggle: function (id) {
-        this.props.onChange(id);
+    handleToggle: function (id, todo) {
+        this.props.onChange(id, todo);
     },
     render: function () {
         var todoList = [];

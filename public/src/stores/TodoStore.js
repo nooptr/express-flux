@@ -7,6 +7,18 @@ var CHANGE_EVENT = 'change';
 
 var _todos = {};
 
+function setTodos(todos) {
+    _todos = todos;
+}
+
+function createByIdAndText(id, text) {
+    _todos[id] = {
+        id: id,
+        text: text,
+        complete: false
+    };
+}
+
 function create(text) {
     var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
     _todos[id] = {
@@ -20,7 +32,7 @@ function update(id, updates) {
     _todos[id] = assign({}, _todos[id], updates);
 }
 
-function archive(todo) {
+function archive() {
     for (var key in _todos) {
         if (_todos[key].complete) {
             destroy(key);
@@ -43,44 +55,36 @@ var TodoStore = assign({}, EventEmitter.prototype, {
 
     addChangeListener: function(callback) {
         this.on(CHANGE_EVENT, callback);
-    },
-
-    removeChangeListener: function(callback) {
-        this.removeListener(CHANGE_EVENT, callback);
     }
 });
 
 AppDispatcher.register(function(action) {
-    switch (action) {
+    switch (action.actionType) {
+        case TodoConstants.TODO_ALL:
+            setTodos(action.todos);
+            break;
+
         case TodoConstants.TODO_CREATE:
-            var text = action.text.trim();
-            if (text !== '') {
-                create(text);
-
-                TodoStore.emitChange();
-            }
-            break;
-        case TodoConstants.TODO_UPDATE:
-            var id = action.id;
-            var todo = _todos[id];
-            todo.complete = todo.comlete ? false : true;
-            update(id, todo);
-
-            TodoStore.emitChange();
-            break;
-        case TodoConstants.TODO_ARCHIVE:
             var todo = action.todo;
-            archive(todo);
-
-            TodoStore.emitChange();
+            createByIdAndText(todo._id, todo.text);
             break;
-        case TodoConstants.TODO_DESTROY:
-            var id = action.id;
-            destroy(id);
 
-            TodoStore.emitChange();
+        case TodoConstants.TODO_UPDATE:
+            var id = action.todo.id;
+            update(id, todo);
             break;
+
+        case TodoConstants.TODO_ARCHIVE:
+            archive();
+            break;
+
+        default:
+            return true;
     }
+
+    TodoStore.emitChange();
+
+    return true;
 });
 
-module.export = TodoStore;
+module.exports = TodoStore;
